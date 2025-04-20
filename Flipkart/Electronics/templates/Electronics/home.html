@@ -1,0 +1,229 @@
+<h1>Flipkart</h1>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flipkart-Inspired Product Listing</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            /* Black background */
+            color: #fff;
+            /* White text for better contrast */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #131921;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            z-index: 1000;
+        }
+
+        .navbar-left,
+        .navbar-menu,
+        .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-left .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        .navbar-left .location {
+            font-size: 0.9rem;
+        }
+
+        .navbar-menu a {
+            margin: 0 10px;
+            font-size: 0.95rem;
+            color: #fff;
+            transition: color 0.3s ease;
+            /* Smooth color transition */
+        }
+
+        .navbar-menu a:hover {
+            color: #ddd;
+            /* Slightly lighter on hover */
+        }
+
+        .navbar-right a {
+            margin: 10px;
+            font-size: 0.95rem;
+            color: #fff;
+            transition: color 0.3s ease;
+            /* Smooth color transition */
+        }
+
+        .navbar-right a:hover {
+            color: #ddd;
+            /* Slightly lighter on hover */
+        }
+
+        /* Main Container */
+        .page-container {
+            padding-top: 70px;
+            /* Offset for fixed navbar */
+        }
+
+        /* Product Grid Section */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: #222;
+            /* Dark background for product cards */
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            /* Transition for click effect */
+            cursor: pointer;
+            /* Indicate it's clickable */
+        }
+
+        .product-card.clicked {
+            background-color: #444;
+            /* Color change on click */
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #eee;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            color: #FFD814;
+            /* Flipkart yellow for price */
+            margin-bottom: 8px;
+        }
+
+        .delivery-info {
+            font-size: 0.9rem;
+            color: #00C853;
+            /* Green for in stock */
+            margin-bottom: 10px;
+        }
+
+        .delivery-info.out-of-stock {
+            color: #FF6D00;
+            /* Orange for out of stock */
+        }
+
+        .add-to-cart {
+            background-color: #FFD814;
+            border: 1px solid #FCD200;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: #111;
+            /* Dark text on yellow button */
+        }
+
+        .add-to-cart:hover {
+            background-color: #f7c948;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <header class="navbar">
+            <div class="navbar-left">
+                <div class="logo">Flipkart.com</div>
+                <div class="location">Delivering to Pune</div>
+            </div>
+            <nav class="navbar-menu">
+                <a href="#">Fresh</a>
+                <a href="#">Today's Deals</a>
+                <a href="#">Prime</a>
+                <a href="#">Electronics</a>
+            </nav>
+            <div class="navbar-right">
+                <a href="#">Sign In</a>
+                <a href="#">Orders</a>
+                <a href="#">Cart</a>
+            </div>
+        </header>
+
+        <main class="product-grid">
+            {% for pro in prod %}
+            <div class="product-card" onclick="this.classList.toggle('clicked')">
+                <div class="product-description">{{ pro.description }}</div>
+
+                <h3 class="product-name">{{ pro.name }}</h3>
+
+                <div class="product-price">Price: ₹{{ pro.price }}</div>
+
+                <div class="delivery-info {% if pro.stock <= 0 %}out-of-stock{% endif %}">
+
+                    {{ pro.stock }}
+                    {% if pro.image %}
+                    <img src="{{pro.image.url}}" alt="Product Image" Style="width: 100px;height:100px">
+                    {%else%}
+                    <p>No image availabe</p>
+                    {% endif %}
+
+
+                    <a href="{% url 'edit_product' pro.id %}">Edit</a>
+                    <a href="{% url 'delete_product' pro.id %}">Delete</a>
+                </div>
+
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <!-- <a href="{% url 'edit_product' pro.id %}">Edit</a> -->
+
+            {% endfor %}
+            <br>
+
+            <form method="POST" action="#" enctype="multipart/form-data">
+                {%csrf_token %}
+                <div>
+                    {{fm.as_p}}
+                </div>
+                <button type="submit">submit</button>
+            </form>
+        </main>
+    </div>
+</body>
+
+</html>

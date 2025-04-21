@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Hello world</h2>
+</body>
+</html>
+
+{% for pro in prod%}
+{{pro.name}} <br>
+{{pro.description}} <br>
+{{pro.price}} <br>
+{% endfor %}
+
+<div>
+    <form action="{% url 'update_data'pro.id%}" method="Get">
+        {%csrf_token %}
+        <div>
+            {{fm.as_p}}
+        </div>
+        <button type="submit">Update Product</button>
+
+        form action="{% url 'delete_data'pro.id%}" method="Get">
+        {%csrf_token %}
+        <div>
+            {{fm.as_p}}
+        </div>
+        <input type="hidden" name = "_method" value = "DELETE">
+        <button type="submit">Delete Product</button>
+</div>
